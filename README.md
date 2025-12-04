@@ -267,7 +267,7 @@ This project is licensed under the MIT License .
 **Saianeesh** 
 - GitHub: [@Saianeesh2003](https://github.com/Saianeesh2003)
 - Project Link: [https://github.com/Saianeesh2003/ai-agent-assistant](https://github.com/Saianeesh2003/ai-agent-assistant)
-
+- Mail:[gantisaianeesh@gmail.com]
 ## 🙏 Acknowledgments
 
 - [Google Gemini](https://deepmind.google/technologies/gemini/) for the powerful AI model
@@ -276,8 +276,6 @@ This project is licensed under the MIT License .
 - The open-source community for inspiration and support
 
 
-**Made  by Saianeesh**
-Contact:gantisaianeesh@gmail.com
 
 If you found this project helpful, please consider giving it a ⭐!
 
