@@ -275,15 +275,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [wttr.in](https://wttr.in/) for weather data API
 - The open-source community for inspiration and support
 
-## ⭐ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Saianeesh2003/ai-agent-assistant&type=Date)](https://star-history.com/#Saianeesh2003/ai-agent-assistant&Date)
-
----
-
-<div align="center">
-
-**Made with ❤️ by Saianeesh**
+**Made  by Saianeesh**
+Contact:gantisaianeesh@gmail.com
 
 If you found this project helpful, please consider giving it a ⭐!
 
