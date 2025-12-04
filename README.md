@@ -6,7 +6,7 @@
 
 > An intelligent AI agent powered by Google Gemini 2.0 that can perform tasks, fetch real-time data, create files, and build web applications autonomously.
 
-![AI Agent Demo](https://via.placeholder.com/800x400/1e1e1e/ffffff?text=AI+Agent+Assistant+Demo)
+
 
 ## ✨ Features
 
@@ -20,7 +20,7 @@
 
 ## 🚀 Live Demo
 
-Try it out here: **[AI Agent Assistant](https://ai-agent-assistant-saianeesh2003.streamlit.app)**
+Try it out here: https://ai-agent-assistant-saianeesh.streamlit.app/
 
 
 
