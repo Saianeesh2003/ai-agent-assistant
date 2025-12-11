@@ -1,6 +1,5 @@
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+from anthropic import Anthropic
 import os
 import requests
 import json
@@ -20,15 +19,17 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "created_files" not in st.session_state:
     st.session_state.created_files = []
+if "example_query" not in st.session_state:
+    st.session_state.example_query = None
 
 # ============ GET CLIENT ============
 @st.cache_resource
 def get_client():
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    api_key = os.environ.get("CLAUDE_API_KEY")
     if not api_key:
-        st.error("⚠️ GOOGLE_API_KEY not found! Please check your .env file")
+        st.error("⚠️ API_KEY not found! Please check your .env file")
         st.stop()
-    return genai.Client(api_key=api_key)
+    return Anthropic(api_key=api_key)
 
 client = get_client()
 
@@ -86,11 +87,13 @@ IMPORTANT RULES:
 1. If the user asks a simple question that doesn't need tools (like "write code for X", "explain Y", "help me with Z"), go DIRECTLY to "finish" step with your answer. DO NOT use tools for simple questions.
 2. ONLY use tools when you need to: fetch weather, create actual files, or perform external actions.
 3. Output ONLY raw JSON. Do NOT wrap it in markdown code blocks.
-4. For web apps: Create COMPLETE, WORKING files with ALL necessary code. Don't create placeholder or incomplete files and ensure * The primary goal is to create visually stunning, highly polished, and responsive web pages suitable for desktop browsers.
-* Prioritize clean, modern design and intuitive user experience.
-5. For simple HTML/CSS/JS apps: Create self-contained files that work when opened directly.
-6. Action Step: Use 'create_file' tool. Input format: "filename|code_content".
-7.Accuracy & Detail: Strive for technical accuracy and adhere to detailed specifications (e.g., Tailwind classes,  CSS properties).
+4. For web apps: Create COMPLETE, WORKING files with ALL necessary code. Don't create placeholder or incomplete files and ensure the primary goal is to create visually stunning, highly polished, and responsive web pages suitable for desktop browsers.
+5. Prioritize clean, modern design and intuitive user experience.
+6. For simple HTML/CSS/JS apps: Create self-contained files that work when opened directly.
+7. Action Step: Use 'create_file' tool. Input format: "filename|code_content".
+8. Accuracy & Detail: Strive for technical accuracy and adhere to detailed specifications (e.g., Tailwind classes, CSS properties).
+9. If user asks who you are, tell them you are a helpful assistant developed by Sai Aneesh.
+10. You are an expert in Mathematics as well.
 
 Output JSON Format:
 {
@@ -110,35 +113,42 @@ Examples:
 def run_agent_streamlit(user_query):
     """Run your agent with Streamlit UI"""
     
-    chat_history = [
-        {"role": "user", "parts": [{"text": user_query}]}
-    ]
+    # Initialize conversation history for Claude
+    conversation_history = []
     
     # Create container for status updates
     status_container = st.container()
     
     for i in range(15):
         try:
-            # Call Gemini API
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=chat_history,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_PROMPT,
-                    temperature=0.7, 
-                    response_mime_type="application/json" 
-                )
+            # Build messages for Claude API
+            if not conversation_history:
+                # First message
+                messages = [{"role": "user", "content": user_query}]
+            else:
+                # Continue conversation
+                messages = conversation_history
+            
+            # Call Claude API
+            response = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=2000,
+                system=SYSTEM_PROMPT,
+                messages=messages
             )
             
+            # Extract response text
+            response_text = response.content[0].text
+            
             # Clean and parse response
-            response_text = clean_json(response.text)
+            cleaned_text = clean_json(response_text)
             
             try:
-                ai_data = json.loads(response_text)
+                ai_data = json.loads(cleaned_text)
             except json.JSONDecodeError:
                 st.warning("⚠️ Invalid JSON received, retrying...")
-                chat_history.append({"role": "model", "parts": [{"text": response_text}]})
-                chat_history.append({"role": "user", "parts": [{"text": "Error: Invalid JSON format. Please output valid JSON only."}]})
+                conversation_history.append({"role": "assistant", "content": response_text})
+                conversation_history.append({"role": "user", "content": "Error: Invalid JSON format. Please output valid JSON only."})
                 continue
 
             step = ai_data.get("step")
@@ -154,7 +164,8 @@ def run_agent_streamlit(user_query):
                 elif step == "observe":
                     st.success(f"👀 **Observation:** {content[:150]}...")
 
-            chat_history.append({"role": "model", "parts": [{"text": response_text}]})
+            # Add to conversation history
+            conversation_history.append({"role": "assistant", "content": response_text})
 
             # Check if finished
             if step == "finish":
@@ -173,10 +184,10 @@ def run_agent_streamlit(user_query):
                         "content": tool_result
                     })
                     
-                    chat_history.append({"role": "user", "parts": [{"text": observation_json}]})
+                    conversation_history.append({"role": "user", "content": observation_json})
                 else:
                     error_msg = f"Error: Tool '{func_name}' not found. Available tools: {list(available_tools.keys())}"
-                    chat_history.append({"role": "user", "parts": [{"text": error_msg}]})
+                    conversation_history.append({"role": "user", "content": error_msg})
 
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
@@ -186,7 +197,7 @@ def run_agent_streamlit(user_query):
 
 # ============ UI LAYOUT ============
 st.title("🤖 AI Agent Assistant")
-st.markdown("### Powered by Google Gemini 2.0")
+st.markdown("### Powered by Claude ")
 
 # Sidebar
 with st.sidebar:
@@ -301,4 +312,4 @@ if user_input:
 
 # Footer
 st.divider()
-st.caption("🎈 Built with Streamlit | Powered by Google Gemini 2.0")
+st.caption("🎈 Built with Streamlit | Powered by Claude ")
