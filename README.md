@@ -162,7 +162,7 @@ The AI Agent follows an autonomous loop powered by Claude Sonnet 4:
 ### Tech Stack
 
 - **Frontend**: Streamlit (Python web framework)
-- **AI Model**: Claude Sonnet 4 (Anthropic)
+- **AI Model**: Claude (Anthropic)
 - **APIs**: wttr.in (Weather data)
 - **Language**: Python 3.12+
 
@@ -226,7 +226,7 @@ ai-agent-assistant/
 ## 🛠️ Technologies Used
 
 - **[Streamlit](https://streamlit.io/)** - Web framework for data apps
-- **[Claude Sonnet 4](https://www.anthropic.com/claude)** - Advanced AI language model by Anthropic
+- **[Claude ](https://www.anthropic.com/claude)** - Advanced AI language model by Anthropic
 - **[Python-dotenv](https://pypi.org/project/python-dotenv/)** - Environment variable management
 - **[Requests](https://requests.readthedocs.io/)** - HTTP library for API calls
 
