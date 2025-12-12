@@ -18,9 +18,9 @@
 - 🔄 **Multi-step Reasoning** - Agent thinks through complex tasks step-by-step
 - 🎨 **Modern Design** - Polished, responsive web pages with excellent UX
 
-## 🚀 Live Demo
+## 🚀 Live at:  **[AI Agent Assistant](https://ai-agent-assistant-saianeesh.streamlit.app/)**
 
-Try it out here: **[AI Agent Assistant](https://ai-agent-assistant-saianeesh.streamlit.app/)**
+Video Demo: https://youtu.be/vH32fq1o4v4
 
 ## 📋 Table of Contents
 
